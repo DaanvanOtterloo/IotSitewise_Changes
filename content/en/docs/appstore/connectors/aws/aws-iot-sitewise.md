@@ -19,7 +19,7 @@ AWS IoT SiteWise is a managed service that simplifies collecting, organizing, an
 
 The AWS IoT SiteWise connector requires Mendix Studio Pro version 9.18.0 or above.
 
-To authenticate with Amazon Web Service (AWS), you must also install and configure the [AWS Authentication connector version 2.3.0 or higher](https://marketplace.mendix.com/link/component/120333). It is crucial for the AWS IoT SiteWise connector to function correctly. For more information about installing and configuring the AWS Authentication connector, see [AWS Authentication](/appstore/connectors/aws/aws-authentication/).
+To authenticate with Amazon Web Service (AWS), you must also install and configure the [AWS Authentication connector version 2.3.0 or higher](https://marketplace.mendix.com/link/component/120333). If you are using the Amazon Iot SiteWise connector version 2.0 or higher, it requires the AWS Authentication connector version 3.0 or higher. It is crucial for the Amazon Iot SiteWise connector to function correctly. For more information about installing and configuring the AWS Authentication connector, see [AWS Authentication](/appstore/connectors/aws/aws-authentication/).
 
 ### 1.3 Licensing and Cost
 
@@ -44,32 +44,32 @@ After you install the connector, you can find it in the **App Explorer**, in the
 In order to use the AWS IoT SiteWise service, you must authenticate with AWS. To do so, you must set up a configuration profile in your Mendix app. After you set up the configuration profile, the connector module handles the authentication internally.
 
 1. Ensure that you have installed and configured the AWS Authentication connector, as mentioned in [Prerequisites](#prerequisites).
-2. Decide whether you want to use session or static credentials to authenticate.
-    The AWS IoT SiteWise connector supports both session and static credentials. By default, the connector is pre-configured to use static credentials, but you may want to switch to session credentials, for example, to increase the security of your app. For an overview of both authentication methods, see [AWS Authentication](/appstore/connectors/aws/aws-authentication/).
+2. Decide whether you want to use temporary or static credentials to authenticate.
+    The AWS IoT SiteWise connector supports both temporary and static credentials. By default, the connector is pre-configured to use static credentials, but you may want to switch to temporary credentials, for example, to increase the security of your app. For an overview of both authentication methods, see [AWS Authentication](/appstore/connectors/aws/aws-authentication/).
 3. In the **App Explorer**, double-click the **Settings** for your app.
 
     {{< figure src="/attachments/appstore/connectors/aws-dynamodb/appsettings.png" alt="The Settings option in the App Explorer">}}
 
 4. In the **App Settings** dialog, in the **Configurations** tab, edit or create an authentication profile.
-    If you have multiple sets of AWS credentials, or if you want to use both static and session credentials for different use cases, create separate authentication profiles for each set of credentials.
+    If you have multiple sets of AWS credentials, or if you want to use both static and temporary credentials for different use cases, create separate authentication profiles for each set of credentials.
 5. In the **Edit Configuration** dialog, in the **Constants** tab, click **New** to add the constants required for the configuration.
-6. In the **Select Constants** dialog, find and expand the **AWSIoTSiteWiseConnector** > **ConnectionDetails** section.
+6. In the **Select Constants** dialog, find and expand the **AWSAuthentication** > **ConnectionDetails** section.
 
-    {{< figure src="/attachments/appstore/connectors/aws-dynamodb/credentials.png" alt="The SessionCredentials and StaticCredentials items in the ConnectionDetails section">}}
+    {{< figure src="/attachments/appstore/connectors/aws-dynamodb/credentials.png" alt="The TemporaryCredentials and StaticCredentials items in the ConnectionDetails section">}}
 
-7. Depending on your selected authentication type, configure the required parameters for the **StaticCredentials** or **SessionCredentials**.
+7. Depending on your selected authentication type, configure the required parameters for the **StaticCredentials** or **TemporaryCredentials**.
 
     | Credentials type | Parameter | Value |
     | --- | --- | --- |
-    | Any | **UseStaticCredentials** | **true** if you want to use static credentials, or **false** for session credentials |
+    | Any | **UseStaticCredentials** | **true** if you want to use static credentials, or **false** for temporary credentials |
     | **StaticCredentials** | **AccessKey** | Access key ID [created in IAM](/appstore/connectors/aws/aws-authentication/#prerequisites)  |
     | **StaticCredentials** | **SecretKey** | Secret key [created in IAM](/appstore/connectors/aws/aws-authentication/#prerequisites) |
-    | **SessionCredentials** | **Role ARN** | [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of the AWS role that the connector should assume |
-    | **SessionCredentials** | **Profile ARN** | ARN of the profile [created in IAM Roles Anywhere](/appstore/connectors/aws/aws-authentication/#prerequisites) |
-    | **SessionCredentials** | **Trust Anchor ARN** | ARN of the trust anchor [created in IAM Roles Anywhere](/appstore/connectors/aws/aws-authentication/#prerequisites) |
-    | **SessionCredentials** | **Client Certificate Identifier** | The **Client Certificate Pin** visible in the **Outgoing Certificates** section on the **Network** tab in the Mendix Cloud environment |
-    | **SessionCredentials** | **Duration** | Duration for which the session token should be valid; after the duration passes, the validity of the session credentials expires |
-    | **SessionCredentials** | **Session Name** | An identifier for the session |
+    | **TemporaryCredentials** | **Role ARN** | [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of the AWS role that the connector should assume |
+    | **TemporaryCredentials** | **Profile ARN** | ARN of the profile [created in IAM Roles Anywhere](/appstore/connectors/aws/aws-authentication/#prerequisites) |
+    | **TemporaryCredentials** | **Trust Anchor ARN** | ARN of the trust anchor [created in IAM Roles Anywhere](/appstore/connectors/aws/aws-authentication/#prerequisites) |
+    | **TemporaryCredentials** | **Client Certificate Identifier** | The **Client Certificate Pin** visible in the **Outgoing Certificates** section on the **Network** tab in the Mendix Cloud environment |
+    | **TemporaryCredentials** | **Duration** | Duration for which the session token should be valid; after the duration passes, the validity of the Temporary credentials expires |
+    | **TemporaryCredentials** | **Session Name** | An identifier for the session |
 
 ### 3.2 Configuring a Microflow for an AWS Service
 
@@ -623,34 +623,7 @@ The domain model is a data model that describes the information in your applicat
 
 An enumeration is a predefined list of values that can be used as an attribute type. For the AWS IoT SiteWise connector, enumerations list values such as the list of available AWS regions, the asset model state, error details code and the detailed error codes.
 
-#### 4.2.1 ENUM_Region {#enum-region}
-
-| Name | Caption | 
-| --- | --- | 
-| `us_east_2` | US East (Ohio) | 
-| `us_east_1` | US East (N. Virginia) | 
-| `us_west_1` | US West (N. California) | 
-| `us_west_2` | US West (Oregon) | 
-| `af_south_1` | Africa (Cape Town) | 
-| `ap_east_1` | Asia Pacific (Hong Kong) | 
-| `ap_southeast_3` | Asia Pacific (Jakarta) | 
-| `ap_south_1` | Asia Pacific (Mumbai) | 
-| `ap_northeast_3` | Asia Pacific (Osaka) | 
-| `ap_northeast_2` | Asia Pacific (Seoul) | 
-| `ap_southeast_1` | Asia Pacific (Singapore) | 
-| `ap_southeast_2` | Asia Pacific (Sydney) | 
-| `ap_northeast_1` | Asia Pacific (Tokyo) | 
-| `ca_central_1` | Canada (Central) | 
-| `eu_central_1` | Europe (Frankfurt) | 
-| `eu_west_1` | Europe (Ireland) | 
-| `eu_west_2` | Europe (London) | 
-| `eu_south_1` | Europe (Milan) | 
-| `eu_west_3` | Europe (Paris) | 
-| `eu_north_1` | Europe (Stockholm) | 
-| `me_south_1` | Middle East (Bahrain) | 
-| `sa_east_1` | South America (São Paulo) |
-
-#### 4.2.2 ENUM_AssetModelStatus_State
+#### 4.2.1 ENUM_AssetModelStatus_State
 
  Name | Caption | Description |
 | --- | --- | --- |
@@ -661,21 +634,21 @@ An enumeration is a predefined list of values that can be used as an attribute t
 | `DELETING` | DELETING | The asset model is being deleted. |
 | `FAILED` | FAILED | The asset model failed to validate during a create or update operation. |
 
-#### 4.2.3 ENUM_ErrorDetails_Code
+#### 4.2.2 ENUM_ErrorDetails_Code
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `VALIDATION_ERROR` | VALIDATION_ERROR |  |
 | `INTERNAL_FAILURE` | INTERNAL_FAILURE |  |
 
-#### 4.2.4 ENUM_DetailedError_Code
+#### 4.2.3 ENUM_DetailedError_Code
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `INCOMPATIBLE_COMPUTE_LOCATION` | The provided compute location is incompatible. |  |
 | `INCOMPATIBLE_FORWARDING_CONFIGURATION` | The provided forwarding configuration is incompatible. |  |
 
-#### 4.2.5 ENUM_PortalStatus_State
+#### 4.2.4 ENUM_PortalStatus_State
 
  Name | Caption | Description |
 | --- | --- | --- |
@@ -685,7 +658,7 @@ An enumeration is a predefined list of values that can be used as an attribute t
 | `ACTIVE` | ACTIVE | The portal is active. |
 | `FAILED` | FAILED | The portal failed to validate during a create or update operation. |
 
-#### 4.2.6 ENUM_MonitorErrorDetails_Code
+#### 4.2.5 ENUM_MonitorErrorDetails_Code
 
 | Name | Caption | Description |
 | --- | --- | --- |
@@ -693,21 +666,21 @@ An enumeration is a predefined list of values that can be used as an attribute t
 | `VALIDATION_ERROR` | A validation error was returned. |  |
 | `LIMIT_EXCEEDED` | The monitoring limit has been exceeded. |  |
 
-#### 4.2.7 ENUM_AssetModelCompositeModelType
+#### 4.2.6 ENUM_AssetModelCompositeModelType
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `AWS` | INTERNAL_FAILURE | The type of the composite model. |
 | `ALARM` | VALIDATION_ERROR | The type of the composite model. |
 
-#### 4.2.8 ENUM_ComputeLocation
+#### 4.2.7 ENUM_ComputeLocation
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `EDGE` | EDGE | The variable is being computed on the Edge device. |
 | `CLOUD` | CLOUD | The variable is being computed in the cloud. |
 
-#### 4.2.9 ENUM_DataType
+#### 4.2.8 ENUM_DataType
 
 | Name | Caption | Description |
 | --- | --- | --- |
@@ -717,35 +690,35 @@ An enumeration is a predefined list of values that can be used as an attribute t
 | `_BOOLEAN` | BOOLEAN | The variable is of type Boolean. |
 | `STRUCT` | STRUCT | The variable is of type struct. |
 
-#### 4.2.10 ENUM_ForwardingConfigState
+#### 4.2.9 ENUM_ForwardingConfigState
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `DISABLED` | DISABLED | The forwarding config state is disabled. |
 | `ENABLED` | ENABLED | The forwarding config state is enabled. |
 
-#### 4.2.11 ENUM_ListAssetsFilter
+#### 4.2.10 ENUM_ListAssetsFilter
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `ALL` | ALL | The filter to retrieve all assets associated with a specified asset model. |
 | `TOP_LEVEL` | TOP_LEVEL | The filter to retrieve only top-level assets. |
 
-#### 4.2.12 ENUM_PropertyNotificationState
+#### 4.2.11 ENUM_PropertyNotificationState
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `ENABLED` | ENABLED | Describes a property's notification state. |
 | `DISABLED` | DISABLED | Describes a property's notification state. |
 
-#### 4.2.13 ENUM_AssociatedAsset_TraversalDirection
+#### 4.2.12 ENUM_AssociatedAsset_TraversalDirection
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `CHILD` | CHILD | Lists all child assets associated to the asset. |
 | `PARENT` | PARENT | The list includes the asset's parent asset. |
 
-#### 4.2.14 ENUM_AssetPropertyValue_Quality
+#### 4.2.13 ENUM_AssetPropertyValue_Quality
 
 | Name | Caption | Description |
 | --- | --- | --- |
@@ -753,14 +726,14 @@ An enumeration is a predefined list of values that can be used as an attribute t
 | `BAD` | BAD | The data is affected by an issue such as sensor failure. |
 | `UNCERTAIN` | UNCERTAIN | The data is affected by an issue such as sensor inaccuracy. |
 
-#### 4.2.15 ENUM_TimeOrdering
+#### 4.2.14 ENUM_TimeOrdering
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `ASCENDING` | ASCENDING | Chronological sorting order of the requested information is ascending. |
 | `DESCENDING` | DESCENDING | Chronological sorting order of the requested information is descending. |
 
-#### 4.2.16 ENUM_Resolution
+#### 4.2.15 ENUM_Resolution
 
 | Name | Caption | Description |
 | --- | --- | --- |
@@ -769,7 +742,7 @@ An enumeration is a predefined list of values that can be used as an attribute t
 | `_1h` | 1h | Time interval of one hour over which data is aggregated. |
 | `_1d` | 1d | Time interval of one day over which data is aggregated. |
 
-#### 4.2.17 ENUM_AggregateType
+#### 4.2.16 ENUM_AggregateType
 
 | Name | Caption | Description |
 | --- | --- | --- |
@@ -780,7 +753,7 @@ An enumeration is a predefined list of values that can be used as an attribute t
 | `SUM` | SUM | Data aggregating function being the summed up value in the specified period. |
 | `STANDARD_DEVIATION` | STANDARD_DEVIATION | Data aggregating function being the standard deviation in the specified period. |
 
-#### 4.2.18 ENUM_ErrorCode
+#### 4.2.17 ENUM_ErrorCode
 
 | Name | Caption | Description |
 | --- | --- | --- |
@@ -788,14 +761,14 @@ An enumeration is a predefined list of values that can be used as an attribute t
 | `InvalidRequestException` | InvalidRequestException | Retrieving the property value returned an error because the request was invalid. |
 | `AccessDeniedException` | AccessDeniedException | Retrieving the property value returned and error because access was denied. |
 
-#### 4.2.19 ENUM_CompletionStatus
+#### 4.2.18 ENUM_CompletionStatus
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `SUCCESS` | SUCCESS | The entry was skipped because it was included in a prior batch retrieval call. |
 | `ERROR` | ERROR | The entry was skipped because it returned an error. |
 
-#### 4.2.20 ENUM_BatchPutAssetPropertyError_ErrorCode
+#### 4.2.19 ENUM_BatchPutAssetPropertyError_ErrorCode
 
 | Name | Caption | Description |
 | --- | --- | --- |
