@@ -273,6 +273,10 @@ These entities are used as input for the `GetSigV4Headers` Java action, which re
 
 The values set in the response entity are used as request headers in the REST call to AWS.
 
+### 4.4 Using regions not provided in the region enumeration {#regions}
+
+The region enumeration contains all available service regions as tabulated by AWS, see [AWS service endpoints](https://docs.aws.amazon.com/general/latest/gr/rande.html#pca_region). These aren't all regions supported by the AWS Java SDK though. If one has a non standard use case and wishes to use a region that is available through the SDK but not included in the region enumeration one can simply add the region to the enumeration and start using it. For a full list of SDK supported regions see, [region (AWS SDK for Java](https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/regions/Region.html). 
+
 #### 5 Read More
 
 * [Securely Connect with the AWS Authentication Connector](https://www.mendix.com/blog/securely-connect-with-the-aws-authentication-connector/)
