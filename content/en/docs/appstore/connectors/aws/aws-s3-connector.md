@@ -48,9 +48,9 @@ After you install the connector, you can find it in the **App Explorer**, in the
 In order to use the Amazon 3 service, you must authenticate with AWS. To do so, you must set up a configuration profile in your Mendix app. After you set up the configuration profile, the connector module handles the authentication internally.
 
 1. Ensure that you have installed and configured the AWS Authentication connector, as mentioned in [Prerequisites](#prerequisites).
-2. Decide whether you want to use session or static credentials to authenticate.
+2. Decide whether you want to use temporary or static credentials to authenticate.
 
-    The Amazon S3 connector supports both session and static credentials. By default, the connector is pre-configured to use static credentials, but you may want to switch to session credentials, for example, to increase the security of your app. For an overview of both authentication methods, see [AWS Authentication](/appstore/connectors/aws/aws-authentication/).
+    The Amazon S3 connector supports both temporary and static credentials. By default, the connector is pre-configured to use static credentials, but you may want to switch to temporary credentials, for example, to increase the security of your app. For an overview of both authentication methods, see [AWS Authentication](/appstore/connectors/aws/aws-authentication/).
 
 3. In the **App Explorer**, double-click the **Settings** for your app.
     
@@ -58,26 +58,26 @@ In order to use the Amazon 3 service, you must authenticate with AWS. To do so, 
 
 4. In the **App Settings dialog**, in the **Configurations** tab, edit or create an authentication profile.
     
-    If you have multiple sets of AWS credentials, or if you want to use both static and session credentials for different use cases, create separate authentication profiles for each set of credentials.
+    If you have multiple sets of AWS credentials, or if you want to use both static and temporary credentials for different use cases, create separate authentication profiles for each set of credentials.
 
 5. In the **Edit Configuration** dialog, in the **Constants** tab, click **New** to add the constants required for the configuration.
 6. In the **Select Constants** dialog, find and expand the **AmazonS3Connector** > **ConnectionDetails** section.
 
-    {{< figure src="/attachments/appstore/connectors/aws-s3-connector/constants.png" alt="The SessionCredentials and StaticCredentials items in the ConnectionDetails section">}}
+    {{< figure src="/attachments/appstore/connectors/aws-s3-connector/constants.png" alt="The temporaryCredentials and StaticCredentials items in the ConnectionDetails section">}}
 
-7. Depending on your selected authentication type, configure the required parameters for the **StaticCredentials** or **SessionCredentials**.
+7. Depending on your selected authentication type, configure the required parameters for the **StaticCredentials** or **temporaryCredentials**.
    
     | Credentials type | Parameter | Value |
     | --- | --- | --- |
-    | Any | **UseStaticCredentials** | **true** if you want to use static credentials, or **false** for session credentials |
+    | Any | **UseStaticCredentials** | **true** if you want to use static credentials, or **false** for temporary credentials |
     | **StaticCredentials** | **AccessKey** | Access key ID [created in IAM](/appstore/connectors/aws/aws-authentication/#prerequisites)  |
     | **StaticCredentials** | **SecretKey** | Secret key [created in IAM](/appstore/connectors/aws/aws-authentication/#prerequisites) |
-    | **SessionCredentials** | **Role ARN** | [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of the AWS role that the connector should assume |
-    | **SessionCredentials** | **Profile ARN** | ARN of the profile [created in IAM Roles Anywhere](/appstore/connectors/aws/aws-authentication/#prerequisites) |
-    | **SessionCredentials** | **Trust Anchor ARN** | ARN of the trust anchor [created in IAM Roles Anywhere](/appstore/connectors/aws/aws-authentication/#prerequisites) |
-    | **SessionCredentials** | **Client Certificate Identifier** | The **Client Certificate Pin** visible in the **Outgoing Certificates** section on the **Network** tab in the Mendix Cloud environment |
-    | **SessionCredentials** | **Duration** | Duration for which the session token should be valid; after the duration passes, the validity of the session credentials expires |
-    | **SessionCredentials** | **Session Name** | An identifier for the session |
+    | **temporaryCredentials** | **Role ARN** | [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of the AWS role that the connector should assume |
+    | **temporaryCredentials** | **Profile ARN** | ARN of the profile [created in IAM Roles Anywhere](/appstore/connectors/aws/aws-authentication/#prerequisites) |
+    | **temporaryCredentials** | **Trust Anchor ARN** | ARN of the trust anchor [created in IAM Roles Anywhere](/appstore/connectors/aws/aws-authentication/#prerequisites) |
+    | **temporaryCredentials** | **Client Certificate Identifier** | The **Client Certificate Pin** visible in the **Outgoing Certificates** section on the **Network** tab in the Mendix Cloud environment |
+    | **temporaryCredentials** | **Duration** | Duration for which the session token should be valid; after the duration passes, the validity of the temporary credentials expires |
+    | **temporaryCredentials** | **Session Name** | An identifier for the session |
 
 ### 3.2 Configuring a Microflow for an AWS Service
 
@@ -128,7 +128,7 @@ The domain model is a data model that describes the information in your applicat
 
 The entities in the table below describe all generalizations. These are reused by the different models for the specific microflow activities or for storing connection details.
 
-#### 4.1.1 S3Object {#s3object}
+#### 4.1.1 AbstractS3Object {#abstracts3object}
 
 | Attribute | Description | 
 | --- | --- |
@@ -168,29 +168,35 @@ The entities in the table below describe all generalizations. These are reused b
 
 | Attribute | Description | 
 | --- | --- |
-| `Key` | Describes the object's key |
+| N/A | The object does not contain any attributes, but is associated with the `GetS3ObjectUsage` object |
 
-#### 4.1.7 DeleteObjectRequest {#deleteobjectrequest}
+#### 4.1.7 GetS3ObjectUsage {#gets3objectusage}
+
+| Attribute | Description | 
+| --- | --- |
+| N/A | The object does not contain any attributes, but is a specialization of `AbstractS3Object` object |
+
+#### 4.1.8 DeleteObjectRequest {#deleteobjectrequest}
 
 | Attribute | Description | 
 | --- | --- |
 | `BucketName` | Describes the name of the bucket to delete |
 | `Key` | Describes the object's key |
 
-#### 4.1.8 ListBucketResponse {#listbucketrequest}
+#### 4.1.9 ListBucketRequest {#listbucketrequest}
 
 | Attribute | Description | 
 | --- | --- |
 | N/A | The object does not contain any attributes, but is associated with the `Bucket` object|
 
-#### 4.1.9 Bucket {#bucket}
+#### 4.1.10 Bucket {#bucket}
 
 | Attribute | Description | 
 | --- | --- |
 | `BucketName` | Describes the name of the bucket |
 | `CreationDate` | Describes the creation date of the bucket |
 
-#### 4.1.10 ListObjectsRequest {#listobjectsrequest}
+#### 4.1.11 ListObjectsRequest {#listobjectsrequest}
 
 | Attribute | Description | 
 | --- | --- |
@@ -201,7 +207,7 @@ The entities in the table below describe all generalizations. These are reused b
 | `ContinuationToken` | Describes to the Amazon S3 service that the list is being continued on this bucket with a token |
 | `StartAfter` | Describes where you want Amazon S3 to start listing from. Amazon S3 starts listing after this specified key. `StartAfter` can be any key in the bucket |
 
-#### 4.1.11 ListObjectsResponse {#listobjectsresponse}
+#### 4.1.12 ListObjectsResponse {#listobjectsresponse}
 
 | Attribute | Description | 
 | --- | --- |
@@ -209,19 +215,19 @@ The entities in the table below describe all generalizations. These are reused b
 | `KeyCount` | Describes the number of keys returned with this request. `KeyCount` will always be less than or equal to the `MaxKeys` field  of the `ListObjectsRequest`. For example, if you ask for 50 keys, your result will include 50 keys or fewer |
 | `NextContinuationToken` | Describes whether there are more keys in the bucket that can be listed. The next list requests to Amazon S3 can be continued with this `NextContinuationToken`. `NextContinuationToken` is obfuscated and is not a real key |
 
-#### 4.1.12 ListedObject {#listedobject}
+#### 4.1.13 ListedObject {#listedobject}
 
 | Attribute | Description | 
 | --- | --- |
 | N/A | Is a generalization of the S3 object|
 
-#### 4.1.13 CommonPrefix {#commonprefix}
+#### 4.1.14 CommonPrefix {#commonprefix}
 
 | Attribute | Description | 
 | --- | --- |
 | `Prefix` | Describes the name of the prefix |
 
-#### 4.1.14 CopyObjectRequest {#copyobjectrequest}
+#### 4.1.15 CopyObjectRequest {#copyobjectrequest}
 
 | Attribute | Description | 
 | --- | --- |
@@ -230,13 +236,13 @@ The entities in the table below describe all generalizations. These are reused b
 | `DestinationBucketName` | Describes the name of the target bucket |
 | `DestinationKey` | Describes the target Key of the object |
 
-#### 4.1.15 DeleteBucketRequest {#deletebucketrequest}
+#### 4.1.16 DeleteBucketRequest {#deletebucketrequest}
 
 | Attribute | Description | 
 | --- | --- |
 | `BucketName` | Describes the name of the bucket to be deleted | 
 
-#### 4.1.16 MoveObjectRequest {#moveobjectrequest}
+#### 4.1.17 MoveObjectRequest {#moveobjectrequest}
 
 | Attribute | Description | 
 | --- | --- |
@@ -249,39 +255,13 @@ The entities in the table below describe all generalizations. These are reused b
 
 An enumeration is a predefined list of values that can be used as an attribute type. For more information, see [Enumerations](/refguide/enumerations/).
 
-#### 4.2.1 AWS_Region {#aws-region}
-
-| Name | Caption | 
-| --- | --- | 
-| `us_east_2` | US East (Ohio) | 
-| `us_east_1` | US East (N. Virginia) | 
-| `us_west_1` | US West (N. California) | 
-| `us_west_2` | US West (Oregon) | 
-| `af_south_1` | Africa (Cape Town) | 
-| `ap_east_1` | Asia Pacific (Hong Kong) | 
-| `ap_southeast_3` | Asia Pacific (Jakarta) | 
-| `ap_south_1` | Asia Pacific (Mumbai) | 
-| `ap_northeast_3` | Asia Pacific (Osaka) | 
-| `ap_northeast_2` | Asia Pacific (Seoul) | 
-| `ap_southeast_1` | Asia Pacific (Singapore) | 
-| `ap_southeast_2` | Asia Pacific (Sydney) | 
-| `ap_northeast_1` | Asia Pacific (Tokyo) | 
-| `ca_central_1` | Canada (Central) | 
-| `eu_central_1` | Europe (Frankfurt) | 
-| `eu_west_1` | Europe (Ireland) | 
-| `eu_west_2` | Europe (London) | 
-| `eu_south_1` | Europe (Milan) | 
-| `eu_west_3` | Europe (Paris) | 
-| `eu_north_1` | Europe (Stockholm) | 
-| `me_south_1` | Middle East (Bahrain) | 
-| `sa_east_1` | South America (São Paulo) |
-
-#### 4.2.3 ENUM_StorageClass {#enum-storageclass}
+#### 4.2.1 ENUM_StorageClass {#enum-storageclass}
 
 | Name | Caption | Description |
 | --- | --- | --- |
 | `STANDARD` | **STANDARD** | (Default) Selecting this enumeration value stores an object according to the standard class |
 | `REDUCED_REDUNDANCY` | **REDUCED_REDUNDANCY** | Selecting this enumeration value stores an object according to the RRS (reduced redundancy storage) class |
+| `SNOW` | **SNOW** | Selecting this enumeration value stores an object according to the SNOW class used by Snowball Edge devices |
 | `GLACIER` | **GLACIER** | Selecting this enumeration value stores an object according to the glacier class |
 | `STANDARD_IA` | **STANDARD_IA** | Selecting this enumeration value stores an object according to the standard-IA (infrequent access) class |
 | `ONEZONE_IA` | **ONEZONE_IA** | Selecting this enumeration value stores an object according to the one zone-IA (infrequent access) class |
@@ -345,11 +325,11 @@ The `DeleteBucket` Amazon S3 actions allows you delete a bucket. It requires a v
 
 #### 4.3.7 GetObject {#getObject}
 
-The `GetObject` Amazon S3 actions allows you to get an object from the s3 simple storage service. It requires a valid `AWS_Region` and `Credentials`, as well as a `GetObjectRequest` object. It returns a `GetObjectResponse` object which is a `FileDocument` generalization object. The input and output for this service are shown in the table below: 
+The `GetObject` Amazon S3 actions allows you to get an object from the s3 simple storage service. It requires a valid `AWS_Region` and `Credentials`, `GetObjectRequest` as well as a `TargetFile` System.FileDocument object. It returns a `GetObjectResponse` object and commits a `FileDocument` generalization object. The input and output for this service are shown in the table below: 
 
 | Input | Output | 
 | --- | --- | 
-| `GetObjectRequest`, `AWS_Region`, `Credentials` | `GetObjectResponse` |
+| `GetObjectRequest`, `AWS_Region`, `Credentials`, `TargetFile` | `GetObjectResponse` |
 
 #### 4.3.8 CopyObject {#copyobject}
 
