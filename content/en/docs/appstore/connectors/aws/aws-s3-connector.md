@@ -183,7 +183,13 @@ The entities in the table below describe all generalizations. These are reused b
 | `BucketName` | Describes the name of the bucket to delete |
 | `Key` | Describes the object's key |
 
-#### 4.1.9 ListBucketRequest {#listbucketrequest}
+#### 4.1.9 ListBucketsRequest {#listbucketsrequest}
+
+| Attribute | Description | 
+| --- | --- |
+| N/A | The object does not contain any attributes and inherits from the `AbstractRequest` entity|
+
+#### 4.1.9 ListBucketsResponse {#listbucketsresponse}
 
 | Attribute | Description | 
 | --- | --- |
