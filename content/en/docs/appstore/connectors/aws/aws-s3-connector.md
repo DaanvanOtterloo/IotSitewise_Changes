@@ -189,20 +189,20 @@ The entities in the table below describe all generalizations. These are reused b
 | --- | --- |
 | N/A | The object does not contain any attributes and inherits from the `AbstractRequest` entity|
 
-#### 4.1.9 ListBucketsResponse {#listbucketsresponse}
+#### 4.1.10 ListBucketsResponse {#listbucketsresponse}
 
 | Attribute | Description | 
 | --- | --- |
 | N/A | The object does not contain any attributes, but is associated with the `Bucket` object|
 
-#### 4.1.10 Bucket {#bucket}
+#### 4.1.11 Bucket {#bucket}
 
 | Attribute | Description | 
 | --- | --- |
 | `BucketName` | Describes the name of the bucket |
 | `CreationDate` | Describes the creation date of the bucket |
 
-#### 4.1.11 ListObjectsRequest {#listobjectsrequest}
+#### 4.1.12 ListObjectsRequest {#listobjectsrequest}
 
 | Attribute | Description | 
 | --- | --- |
@@ -213,7 +213,7 @@ The entities in the table below describe all generalizations. These are reused b
 | `ContinuationToken` | Describes to the Amazon S3 service that the list is being continued on this bucket with a token |
 | `StartAfter` | Describes where you want Amazon S3 to start listing from. Amazon S3 starts listing after this specified key. `StartAfter` can be any key in the bucket |
 
-#### 4.1.12 ListObjectsResponse {#listobjectsresponse}
+#### 4.1.13 ListObjectsResponse {#listobjectsresponse}
 
 | Attribute | Description | 
 | --- | --- |
@@ -221,19 +221,19 @@ The entities in the table below describe all generalizations. These are reused b
 | `KeyCount` | Describes the number of keys returned with this request. `KeyCount` will always be less than or equal to the `MaxKeys` field  of the `ListObjectsRequest`. For example, if you ask for 50 keys, your result will include 50 keys or fewer |
 | `NextContinuationToken` | Describes whether there are more keys in the bucket that can be listed. The next list requests to Amazon S3 can be continued with this `NextContinuationToken`. `NextContinuationToken` is obfuscated and is not a real key |
 
-#### 4.1.13 ListedObject {#listedobject}
+#### 4.1.14 ListedObject {#listedobject}
 
 | Attribute | Description | 
 | --- | --- |
 | N/A | Is a generalization of the S3 object|
 
-#### 4.1.14 CommonPrefix {#commonprefix}
+#### 4.1.15 CommonPrefix {#commonprefix}
 
 | Attribute | Description | 
 | --- | --- |
 | `Prefix` | Describes the name of the prefix |
 
-#### 4.1.15 CopyObjectRequest {#copyobjectrequest}
+#### 4.1.16 CopyObjectRequest {#copyobjectrequest}
 
 | Attribute | Description | 
 | --- | --- |
@@ -242,13 +242,13 @@ The entities in the table below describe all generalizations. These are reused b
 | `DestinationBucketName` | Describes the name of the target bucket |
 | `DestinationKey` | Describes the target Key of the object |
 
-#### 4.1.16 DeleteBucketRequest {#deletebucketrequest}
+#### 4.1.17 DeleteBucketRequest {#deletebucketrequest}
 
 | Attribute | Description | 
 | --- | --- |
 | `BucketName` | Describes the name of the bucket to be deleted | 
 
-#### 4.1.17 MoveObjectRequest {#moveobjectrequest}
+#### 4.1.18 MoveObjectRequest {#moveobjectrequest}
 
 | Attribute | Description | 
 | --- | --- |
