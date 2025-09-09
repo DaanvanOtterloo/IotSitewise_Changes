@@ -46,6 +46,8 @@ A Shared Access Signature (SAS) provides secure, delegated access to resources i
 2. Create a **SASCredentials** object and populate its **SASToken** attribute.
 3. Pass the **SASCredentials** object to the **AbstractCredentials** parameter in your operation microflow.
 
+Or generate a SAS with a combination of the **POST_v1_Azure_GetUserDelegationKey** and one of the **Create_SAS_Token_Blob**, **Create_SAS_Token_Directory** or **Create_SAS_Token_Container** operations as specified in the "Configuring Operation Microflows" section. If you want to revoke the created SAS tokens that where created under a certain user delegation key before they expire, you can do so by revoking said user delegation key using the **RevokeUserDelegationKey** operation (coming soon).
+
 #### Configuring an Azure Entra ID Access Token
 
 To configure user-based Azure Entra ID authentication, perform the following steps:
